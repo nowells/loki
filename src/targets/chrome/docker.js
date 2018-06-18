@@ -71,6 +71,27 @@ function createChromeDockerTarget({
     dockerUrl = `file://${staticMountPath}`;
   }
 
+  async function ensureImageDownloaded() {
+    ensureDependencyAvailable('docker');
+
+    const { code, stdout, stderr } = await execa(dockerPath, [
+        'images',
+        '-q',
+        chromeDockerImage,
+      ]);
+    if (code === 0) {
+      console.log({stdout})
+      if (stdout.trim().length === 0) {
+        await execa(dockerPath, [
+        'pull',
+        chromeDockerImage,
+      ]);
+      }
+    } else {
+      throw new Error(`Failed querying docker, ${stderr}`);
+    }
+  }
+
   async function start() {
     port = await getRandomPort();
 
@@ -133,7 +154,7 @@ function createChromeDockerTarget({
     }
   });
 
-  return createChromeTarget(start, stop, createNewDebuggerInstance, dockerUrl);
+  return createChromeTarget(start, stop, createNewDebuggerInstance, dockerUrl, ensureImageDownloaded);
 }
 
 module.exports = createChromeDockerTarget;
