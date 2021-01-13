@@ -44,6 +44,7 @@ function createChromeDockerTarget({
   baseUrl = 'http://localhost:6006',
   chromeDockerImage = 'yukinying/chrome-headless-browser',
   chromeFlags = ['--headless', '--disable-gpu', '--hide-scrollbars'],
+  chromeDockerArgs = [],
   dockerWithSudo = false,
   chromeDockerUseCopy = false,
   chromeDockerWithoutSeccomp = false,
@@ -56,7 +57,7 @@ function createChromeDockerTarget({
   const isLocalFile = dockerUrl.indexOf('file:') === 0;
   const staticMountPath = '/var/loki';
   const dockerPath = 'docker';
-  const runArgs = ['run', '--rm', '-d', '-P'];
+  const runArgs = ['run', '--rm', '-d', '-P', ...chromeDockerArgs];
   const execute = getExecutor(dockerWithSudo);
 
   if (!chromeDockerWithoutSeccomp) {

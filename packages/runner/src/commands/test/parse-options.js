@@ -16,6 +16,7 @@ function parseOptions(args, config) {
   });
 
   const $ = key => argv[key] || config[key] || defaults[key];
+  const chromeDockerArgs = $('chromeDockerArgs');
 
   return {
     outputDir: path.resolve($('output')),
@@ -34,6 +35,7 @@ function parseOptions(args, config) {
     ),
     chromeConcurrency: parseInt($('chromeConcurrency'), 10),
     chromeDockerImage: $('chromeDockerImage'),
+    chromeDockerArgs: chromeDockerArgs ? chromeDockerArgs.split(' ') : [],
     chromeEnableAnimations: $('chromeEnableAnimations'),
     chromeFlags: $('chromeFlags').split(' '),
     chromeLoadTimeout: parseInt($('chromeLoadTimeout'), 10),
